@@ -43,13 +43,20 @@ function App() {
     }
   }, []);
 
-  //console.log(pokemons);
+  useEffect(() => {
+    console.log(pokemons.length);
+  }, [pokemons]);
 
   return (
     <div className="App">
       <h1>POKEDEX</h1>
       <Button onClick={handleShow}>Create Pokemon</Button>
-      <CreatePokemon show={show} setShow={setShow} setPokemons={setPokemons} />
+      <CreatePokemon
+        show={show}
+        setShow={setShow}
+        pokemons={pokemons}
+        setPokemons={setPokemons}
+      />
       <PokemonList pokemons={pokemons} />
     </div>
   );

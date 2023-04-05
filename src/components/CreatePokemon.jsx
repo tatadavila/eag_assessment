@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
-const CreatePokemon = ({ show, setShow }) => {
+const CreatePokemon = ({ show, setShow, setPokemons, pokemons }) => {
   const [newPokemon, setNewPokemon] = useState({
     name: "",
     image: "",
@@ -14,10 +14,11 @@ const CreatePokemon = ({ show, setShow }) => {
     setNewPokemon({ ...newPokemon, [event.target.name]: event.target.value });
   };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault()
-  //   setPokemons((pokem))
-  // }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setPokemons([...pokemons, newPokemon]);
+    handleClose();
+  };
 
   console.log(newPokemon);
   return (
@@ -69,7 +70,7 @@ const CreatePokemon = ({ show, setShow }) => {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="primary" onClick={handleSubmit}>
           Save Changes
         </Button>
       </Modal.Footer>
