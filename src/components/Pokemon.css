@@ -1,0 +1,8 @@
+.Pokemon__Card {
+  background-color: teal;
+  background-color: yellowgreen;
+  border-radius: 5px;
+  max-width: 70%;
+  text-align: center;
+  width: 100%;
+}

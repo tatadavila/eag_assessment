@@ -6,21 +6,25 @@ const CreatePokemon = ({ show, setShow, setPokemons, pokemons }) => {
   const [newPokemon, setNewPokemon] = useState({
     name: "",
     image: "",
-    types: "",
+    types: [],
     weight: null,
   });
   const handleClose = () => setShow(false);
   const handleChange = (event) => {
-    setNewPokemon({ ...newPokemon, [event.target.name]: event.target.value });
+    if (event.target.name === "types") {
+      setNewPokemon({ ...newPokemon, types: event.target.value.split(" ") });
+    } else {
+      setNewPokemon({ ...newPokemon, [event.target.name]: event.target.value });
+    }
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    setPokemons([...pokemons, newPokemon]);
+
+    setPokemons([newPokemon, ...pokemons]);
+
     handleClose();
   };
 
-  console.log(newPokemon);
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -54,6 +58,9 @@ const CreatePokemon = ({ show, setShow, setPokemons, pokemons }) => {
               name="types"
               onChange={handleChange}
             />
+            <Form.Text className="text-muted">
+              Separate each type with a space.
+            </Form.Text>
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Weight</Form.Label>

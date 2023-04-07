@@ -1,0 +1,13 @@
+.Search__InputContainer {
+  align-items: center;
+  display: flex;
+}
+
+.hiden {
+  display: none !important;
+}
+
+.Search__Icon {
+  height: 30px;
+  width: 30px;
+}

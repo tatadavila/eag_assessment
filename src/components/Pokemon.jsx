@@ -1,11 +1,15 @@
 import { Card, Col, Row } from "react-bootstrap";
-const Pokemon = ({ key, pokemon }) => {
+
+// @styles
+import "./Pokemon.css";
+
+const Pokemon = ({ pokemon }) => {
   return (
-    <Card key={key} style={{ width: "18rem" }}>
+    <Card className="Pokemon__Card" style={{}}>
       <Card.Img variant="top" src={pokemon.image} />
       <Card.Body>
         <Card.Title>{pokemon.name}</Card.Title>
-        <Card.Text>
+        <Card.Footer>
           <Row>
             <Col>Types:</Col>
             <Col>Weight</Col>
@@ -13,9 +17,8 @@ const Pokemon = ({ key, pokemon }) => {
           <Row>
             <Col>
               {pokemon
-                ? pokemon.types.map((type, index) => {
-                    const { name } = type.type;
-                    return `${name}${
+                ? pokemon.types?.map((type, index) => {
+                    return `${type}${
                       index < pokemon.types.length - 1 ? ", " : ""
                     }`;
                   })
@@ -23,7 +26,7 @@ const Pokemon = ({ key, pokemon }) => {
             </Col>
             <Col>{pokemon.weight}</Col>
           </Row>
-        </Card.Text>
+        </Card.Footer>
       </Card.Body>
     </Card>
   );

@@ -4,8 +4,9 @@ import { Button } from "react-bootstrap";
 import axios from "axios";
 
 // @components
-import PokemonList from "./components/PokemonList";
 import CreatePokemon from "./components/CreatePokemon";
+import PokemonList from "./components/PokemonList";
+import Search from "./components/Search";
 
 // @styles
 import "./App.css";
@@ -24,12 +25,15 @@ function App() {
         response.data.results.forEach((elem) => {
           const getPokemonData = async () => {
             const { data } = await axios.get(elem.url);
+
+            let typeArr = data.types?.map((t) => t.type.name);
+
             setPokemons((pokemons) => [
               ...pokemons,
               {
                 name: data.name,
                 image: data.sprites.front_default,
-                types: data.types,
+                types: typeArr,
                 weight: data.weight,
               },
             ]);
@@ -43,14 +47,15 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(pokemons.length);
-  }, [pokemons]);
-
   return (
     <div className="App">
       <h1>POKEDEX</h1>
-      <Button onClick={handleShow}>Create Pokemon</Button>
+      <div className="App__HeaderButtons">
+        <Button onClick={handleShow} style={{ marginInline: "0.5rem" }}>
+          Create Pokemon
+        </Button>
+        <Search setPokemons={setPokemons} pokemons={pokemons} />
+      </div>
       <CreatePokemon
         show={show}
         setShow={setShow}
