@@ -5,7 +5,7 @@ import "./Pokemon.css";
 
 const Pokemon = ({ pokemon }) => {
   return (
-    <Card className="Pokemon__Card" style={{}}>
+    <Card className="Pokemon__Card">
       <Card.Img variant="top" src={pokemon.image} />
       <Card.Body>
         <Card.Title>{pokemon.name}</Card.Title>

@@ -9,14 +9,17 @@ import "./PokemonList.css";
 import GridSystem from "./Layouts/GridSystem";
 
 const PokemonList = ({ pokemons }) => {
+  console.log("***LIST***",pokemons);
   return (
     <Container className="PokemonList__container">
       <GridSystem colCount={3} md={4}>
-        {pokemons.length > 0
-          ? pokemons.map((pokemon) => {
-              return <Pokemon key={pokemon.name} pokemon={pokemon} />;
-            })
-          : [<p>No tracks are found.</p>]}
+        {pokemons.length > 0 ? (
+          pokemons.map((pokemon) => {
+            return <Pokemon key={pokemon.name} pokemon={pokemon} />;
+          })
+        ) : (
+          <p>No tracks are found.</p>
+        )}
       </GridSystem>
     </Container>
   );

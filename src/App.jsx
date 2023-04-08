@@ -1,6 +1,7 @@
 // @modules
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
+import { connect } from "react-redux";
 import axios from "axios";
 
 // @components
@@ -11,41 +12,43 @@ import Search from "./components/Search";
 // @styles
 import "./App.css";
 
-function App() {
-  const [pokemons, setPokemons] = useState([]);
+// @actions
+import { setPokemons as setPokemonsAction } from "./actions";
+
+// @api
+import { getPokemons } from "./api/getPokemons";
+
+function App({ loader, pokemons, setPokemons }) {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
 
   useEffect(() => {
     try {
-      const getPokemonsUrl = async () => {
-        const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=50`,
-        );
-        response.data.results.forEach((elem) => {
-          const getPokemonData = async () => {
-            const { data } = await axios.get(elem.url);
+      const fetchPokemons = async () => {
+        const response = await getPokemons();
+        const promises = response.map(async (elem) => {
+          const { data } = await axios.get(elem.url);
+          let typeArr = data.types?.map((t) => t.type.name);
 
-            let typeArr = data.types?.map((t) => t.type.name);
-
-            setPokemons((pokemons) => [
-              ...pokemons,
-              {
-                name: data.name,
-                image: data.sprites.front_default,
-                types: typeArr,
-                weight: data.weight,
-              },
-            ]);
+          return {
+            name: data.name,
+            image: data.sprites.front_default,
+            types: typeArr,
+            weight: data.weight,
           };
-          getPokemonData();
         });
+        const pokemonsArr = await Promise.all(promises);
+
+        setPokemons(pokemonsArr);
       };
-      getPokemonsUrl();
+
+      fetchPokemons();
     } catch (error) {
       console.log(error);
     }
   }, []);
+
+  console.log({ loader });
 
   return (
     <div className="App">
@@ -67,4 +70,11 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToPorps = (state) => ({
+  pokemons: state.pokemons,
+});
+const mapDispatchToProps = (dispatch) => ({
+  setPokemons: (value) => dispatch(setPokemonsAction(value)),
+});
+
+export default connect(mapStateToPorps, mapDispatchToProps)(App);
