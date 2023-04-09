@@ -1,15 +1,24 @@
 // @modules
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 
-const CreatePokemon = ({ show, setShow, setPokemons, pokemons }) => {
+// @slices
+import { setOpenCreatePokemon, setPokemons } from "../slices";
+
+const CreatePokemon = () => {
+  const dispatch = useDispatch();
+  const pokemons = useSelector((state) => state.data.pokemons);
+  const show = useSelector((state) => state.ui.openCreatePokemon);
+
   const [newPokemon, setNewPokemon] = useState({
     name: "",
     image: "",
     types: [],
     weight: null,
   });
-  const handleClose = () => setShow(false);
+
+  const handleClose = () => dispatch(setOpenCreatePokemon(false));
   const handleChange = (event) => {
     if (event.target.name === "types") {
       setNewPokemon({ ...newPokemon, types: event.target.value.split(" ") });
@@ -20,7 +29,7 @@ const CreatePokemon = ({ show, setShow, setPokemons, pokemons }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    setPokemons([newPokemon, ...pokemons]);
+    dispatch(setPokemons([newPokemon, ...pokemons]));
 
     handleClose();
   };

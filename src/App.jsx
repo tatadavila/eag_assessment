@@ -1,80 +1,46 @@
 // @modules
 import { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { connect } from "react-redux";
-import axios from "axios";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 // @components
-import CreatePokemon from "./components/CreatePokemon";
-import PokemonList from "./components/PokemonList";
-import Search from "./components/Search";
+import { CreatePokemon, PokemonList, Search, Loader } from "./components/";
 
 // @styles
 import "./App.css";
 
-// @actions
-import { setPokemons as setPokemonsAction } from "./actions";
+// @slices
+import { fetchPokemonsWithData, setOpenCreatePokemon } from "./slices";
 
-// @api
-import { getPokemons } from "./api/getPokemons";
-
-function App({ loader, pokemons, setPokemons }) {
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
+function App() {
+  const pokemons = useSelector((state) => state.data.pokemons, shallowEqual);
+  const loading = useSelector((state) => state.ui.loading);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     try {
-      const fetchPokemons = async () => {
-        const response = await getPokemons();
-        const promises = response.map(async (elem) => {
-          const { data } = await axios.get(elem.url);
-          let typeArr = data.types?.map((t) => t.type.name);
-
-          return {
-            name: data.name,
-            image: data.sprites.front_default,
-            types: typeArr,
-            weight: data.weight,
-          };
-        });
-        const pokemonsArr = await Promise.all(promises);
-
-        setPokemons(pokemonsArr);
-      };
-
-      fetchPokemons();
+      dispatch(fetchPokemonsWithData());
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  console.log({ loader });
-
   return (
     <div className="App">
       <h1>POKEDEX</h1>
       <div className="App__HeaderButtons">
-        <Button onClick={handleShow} style={{ marginInline: "0.5rem" }}>
+        <Button
+          onClick={() => dispatch(setOpenCreatePokemon(true))}
+          style={{ marginInline: "0.5rem" }}
+        >
           Create Pokemon
         </Button>
-        <Search setPokemons={setPokemons} pokemons={pokemons} />
+        <Search />
       </div>
-      <CreatePokemon
-        show={show}
-        setShow={setShow}
-        pokemons={pokemons}
-        setPokemons={setPokemons}
-      />
-      <PokemonList pokemons={pokemons} />
+      <CreatePokemon />
+      {loading ? <Loader /> : <PokemonList pokemons={pokemons} />}
     </div>
   );
 }
 
-const mapStateToPorps = (state) => ({
-  pokemons: state.pokemons,
-});
-const mapDispatchToProps = (dispatch) => ({
-  setPokemons: (value) => dispatch(setPokemonsAction(value)),
-});
-
-export default connect(mapStateToPorps, mapDispatchToProps)(App);
+export default App;

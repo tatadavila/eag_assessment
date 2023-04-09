@@ -2,9 +2,17 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
 
+// @styles
+import "./Loader.css";
+
 const Loader = () => {
   return (
-    <Spinner animation="border" role="status" size="lg">
+    <Spinner
+      className="Loader__Spinner"
+      animation="border"
+      role="status"
+      variant="dark"
+    >
       <span className="visually-hidden">Loading...</span>
     </Spinner>
   );

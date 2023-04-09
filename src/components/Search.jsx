@@ -1,6 +1,7 @@
 // @modules
 import React, { useState } from "react";
 import { Button, Form, Image, InputGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 // @assets
 import SearchIcon from "../assets/Icons/search-icon.png";
@@ -8,8 +9,11 @@ import SearchIcon from "../assets/Icons/search-icon.png";
 // @styles
 import "./Search.css";
 
-const Search = ({ pokemons, setPokemons }) => {
-  const [showInput, setShowInput] = useState(false);
+// @slices
+import { setShowSearchInput } from "../slices";
+
+const Search = () => {
+  const showInput = useSelector((state) => state.ui.setShowInput);
   const [query, setQuery] = useState("");
   const handleShowInput = () => {
     setShowInput(true);
@@ -26,7 +30,7 @@ const Search = ({ pokemons, setPokemons }) => {
       <Button
         className={`Search__ShowInputButton ${showInput ? "hiden" : ""}`}
         variant="success"
-        onClick={handleShowInput}
+        onClick={() => dispatch(setShowSearchInput(true))}
       >
         Search
       </Button>
